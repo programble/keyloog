@@ -88,7 +88,8 @@ int main(int argc, char** argv)
     
     Display *display = XOpenDisplay(NULL);
     if (!display) {
-        return -1;
+        fprintf(stderr, "Error: Could not open X display\n");
+        return 1;
     }
     
     char keys_current[32], keys_last[32];

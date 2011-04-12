@@ -53,21 +53,32 @@ void print_stats(int count, time_t start_time)
     printf("You pressed %.2f key%s per day\n", keys_per_day, PLURAL(keys_per_day));
 }
 
+void print_usage(const char *exec_name)
+{
+    printf("Usage: %s [OPTION]...\n\n", exec_name);
+    printf("  -f, --follow      output keypress statistics as they update\n");
+    printf("  -h, --help        display this help and exit\n");
+}
+
 int main(int argc, char** argv)
 {
     bool option_follow = false;
     
     static struct option long_options[] = {
         {"follow", no_argument, NULL, 'f'},
+        {"help", no_argument, NULL, 'h'},
         {0, 0, 0, 0}
     };
     
     char c;
-    while ((c = getopt_long(argc, argv, "f", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "fh", long_options, NULL)) != -1) {
         switch(c) {
         case 'f':
             option_follow = true;
             break;
+        case 'h':
+            print_usage(argv[0]);
+            return 0;
         }
     }
     

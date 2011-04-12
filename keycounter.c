@@ -8,6 +8,7 @@
 #include <time.h>
 #include <math.h>
 #include <getopt.h>
+#include <fcntl.h>
 #include <X11/Xlib.h>
 
 #define TERM_CLEAR "\x1b[2J"
@@ -53,6 +54,29 @@ void print_stats(int count, time_t start_time)
     printf("You pressed %.2f key%s per day\n", keys_per_day, PLURAL(keys_per_day));
 }
 
+void daemonize()
+{
+    // Fork
+    pid_t pid = fork();
+    if (pid < 0) {
+        fprintf(stderr, "Error: Could not fork\n");
+        exit(1);
+    } else if (pid > 0)
+        exit(0); // Exit parent
+    
+    // Detach from controlling terminal
+    setsid();
+    
+    // Close all file descriptors
+    for (int i = getdtablesize(); i >= 0; i--)
+        close(i);
+    
+    // Open stdin, stdout, stderr to /dev/null
+    int fd = open("/dev/null", O_RDWR);
+    dup(fd);
+    dup(fd);
+}
+
 void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]...\n\n", exec_name);
@@ -66,15 +90,19 @@ int main(int argc, char** argv)
     
     static struct option long_options[] = {
         {"follow", no_argument, NULL, 'f'},
+        {"daemonize", no_argument, NULL, 'd'},
         {"help", no_argument, NULL, 'h'},
         {0, 0, 0, 0}
     };
     
     char c;
-    while ((c = getopt_long(argc, argv, "fh", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "fdh", long_options, NULL)) != -1) {
         switch(c) {
         case 'f':
             option_follow = true;
+            break;
+        case 'd':
+            daemonize();
             break;
         case 'h':
             print_usage(argv[0]);

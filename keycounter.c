@@ -79,6 +79,8 @@ int main(int argc, char** argv)
         case 'h':
             print_usage(argv[0]);
             return 0;
+        case '?':
+            return 1;
         }
     }
     

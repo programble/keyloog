@@ -9,6 +9,8 @@
 #include <math.h>
 #include <X11/Xlib.h>
 
+#define PLURAL(x) (x > 1) ? "s" : ""
+
 bool end = false;
 
 void stop(int s)
@@ -29,12 +31,12 @@ void print_stats(int count, time_t start_time)
     
     printf("You pressed %d keys in ", count);
     if (format_days > 0)
-        printf("%ld days, ", format_days);
+        printf("%ld day%s, ", format_days, PLURAL(format_days));
     if (format_hours > 0)
-        printf("%ld hours, ", format_hours);
+        printf("%ld hour%s, ", format_hours, PLURAL(format_hours));
     if (format_minutes > 0)
-        printf("%ld minutes, ", format_minutes);
-    printf("%ld seconds\n", format_seconds);
+        printf("%ld minute%s, ", format_minutes, PLURAL(format_minutes));
+    printf("%ld second%s\n", format_seconds, PLURAL(format_seconds));
     
     double keys_per_second = ((double) count) / elapsed_seconds;
     printf("You pressed %.2f keys per second\n", keys_per_second);

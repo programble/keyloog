@@ -81,12 +81,13 @@ void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]...\n\n", exec_name);
     printf("  -f, --follow      output keypress statistics as they update\n");
+    printf("  -d, --daemonize   run in the background\n");
     printf("  -h, --help        display this help and exit\n");
 }
 
 int main(int argc, char** argv)
 {
-    bool option_follow = false;
+    bool option_follow = false, option_daemonize = false;
     
     static struct option long_options[] = {
         {"follow", no_argument, NULL, 'f'},
@@ -102,7 +103,7 @@ int main(int argc, char** argv)
             option_follow = true;
             break;
         case 'd':
-            daemonize();
+            option_daemonize = true;
             break;
         case 'h':
             print_usage(argv[0]);
@@ -111,6 +112,14 @@ int main(int argc, char** argv)
             return 1;
         }
     }
+    
+    if (option_follow && option_daemonize) {
+        fprintf(stderr, "Error: Cannot follow and daemonize\n");
+        return 1;
+    }
+    
+    if (option_daemonize)
+        daemonize();
     
     signal(SIGTERM, stop);
     signal(SIGQUIT, stop);

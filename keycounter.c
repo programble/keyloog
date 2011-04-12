@@ -10,6 +10,9 @@
 #include <getopt.h>
 #include <X11/Xlib.h>
 
+#define TERM_CLEAR "\x1b[2J"
+#define TERM_HOME "\x1b[H"
+
 #define PLURAL(x) (x != 1) ? "s" : ""
 
 bool end = false;
@@ -52,6 +55,22 @@ void print_stats(int count, time_t start_time)
 
 int main(int argc, char** argv)
 {
+    bool option_follow = false;
+    
+    static struct option long_options[] = {
+        {"follow", no_argument, NULL, 'f'},
+        {0, 0, 0, 0}
+    };
+    
+    char c;
+    while ((c = getopt_long(argc, argv, "f", long_options, NULL)) != -1) {
+        switch(c) {
+        case 'f':
+            option_follow = true;
+            break;
+        }
+    }
+    
     signal(SIGTERM, stop);
     signal(SIGQUIT, stop);
     signal(SIGINT, stop);
@@ -65,6 +84,11 @@ int main(int argc, char** argv)
     int count = 0;
     time_t start_time = time(NULL);
     
+    if (option_follow) {
+        printf(TERM_CLEAR TERM_HOME);
+        print_stats(count, start_time);
+    }
+    
     XQueryKeymap(display, keys_last);
     while (!end) {
         fflush(stdout);
@@ -73,13 +97,18 @@ int main(int argc, char** argv)
         for (int i = 0; i < 32; i++) {
             if (keys_current[i] != keys_last[i] && keys_current[i] != 0) {
                 count++;
-                /* TODO: Move this next part to a -f option */
-                printf("\x1b[2J\x1b[H"); /* Clear and home */
-                print_stats(count, start_time);
+                if (option_follow) {
+                    printf(TERM_CLEAR TERM_HOME);
+                    print_stats(count, start_time);
+                }
             }
             keys_last[i] = keys_current[i];
         }
     }
     XCloseDisplay(display);
+    
+    if (!option_follow)
+        print_stats(count, start_time);
+    
     return 0;
 }

@@ -7,9 +7,10 @@
 #include <signal.h>
 #include <time.h>
 #include <math.h>
+#include <getopt.h>
 #include <X11/Xlib.h>
 
-#define PLURAL(x) (x > 1) ? "s" : ""
+#define PLURAL(x) (x != 1) ? "s" : ""
 
 bool end = false;
 
@@ -29,7 +30,7 @@ void print_stats(int count, time_t start_time)
     long int format_days = format_hours / 24;
     format_hours %= 24;
     
-    printf("You pressed %d keys in ", count);
+    printf("You pressed %d key%s in ", count, PLURAL(count));
     if (format_days > 0)
         printf("%ld day%s, ", format_days, PLURAL(format_days));
     if (format_hours > 0)
@@ -39,10 +40,14 @@ void print_stats(int count, time_t start_time)
     printf("%ld second%s\n", format_seconds, PLURAL(format_seconds));
     
     double keys_per_second = ((double) count) / elapsed_seconds;
-    printf("You pressed %.2f keys per second\n", keys_per_second);
-    printf("You pressed %.2f keys per minute\n", keys_per_second * 60);
-    printf("You pressed %.2f keys per hour\n", keys_per_second * 60 * 60);
-    printf("You pressed %.2f keys per day\n", keys_per_second * 60 * 60 * 24);
+    double keys_per_minute = keys_per_second * 60;
+    double keys_per_hour = keys_per_minute * 60;
+    double keys_per_day = keys_per_hour * 24;
+    
+    printf("You pressed %.2f key%s per second\n", keys_per_second, PLURAL(keys_per_second));
+    printf("You pressed %.2f key%s per minute\n", keys_per_minute, PLURAL(keys_per_minute));
+    printf("You pressed %.2f key%s per hour\n", keys_per_hour, PLURAL(keys_per_hour));
+    printf("You pressed %.2f key%s per day\n", keys_per_day, PLURAL(keys_per_day));
 }
 
 int main(int argc, char** argv)

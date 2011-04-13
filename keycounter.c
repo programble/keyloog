@@ -55,7 +55,7 @@ void print_stats(int count, time_t start_time)
     printf("You pressed %.2f key%s per day\n", keys_per_day, PLURAL(keys_per_day));
 }
 
-void daemonize()
+void daemonize(const char *option_pidfile)
 {
     // Fork
     pid_t pid = fork();
@@ -64,6 +64,18 @@ void daemonize()
         exit(1);
     } else if (pid > 0)
         exit(0); // Exit parent
+    
+    // Write out PID file
+    if (option_pidfile) {
+        pid_t pid = getpid();
+        FILE *pidfile = fopen(option_pidfile, "w");
+        if (!pidfile) {
+            perror(option_pidfile);
+            exit(1);
+        }
+        fprintf(pidfile, "%d\n", pid);
+        fclose(pidfile);
+    }
     
     // Detach from controlling terminal
     setsid();
@@ -126,19 +138,7 @@ int main(int argc, char** argv)
     }
     
     if (option_daemonize)
-        daemonize();
-    
-    // FIXME: Move this to before closing stderr
-    if (option_pidfile) {
-        pid_t pid = getpid();
-        FILE *pidfile = fopen(option_pidfile, "w");
-        if (!pidfile) {
-            perror(option_pidfile);
-            return 1;
-        }
-        fprintf(pidfile, "%d\n", pid);
-        fclose(pidfile);
-    }
+        daemonize(option_pidfile);
     
     signal(SIGTERM, stop);
     signal(SIGQUIT, stop);

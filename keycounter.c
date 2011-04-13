@@ -3,12 +3,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <getopt.h>
+#include <math.h>
 #include <signal.h>
 #include <time.h>
-#include <math.h>
-#include <getopt.h>
-#include <fcntl.h>
+#include <unistd.h>
 #include <X11/Xlib.h>
 
 #define TERM_CLEAR "\x1b[2J"
@@ -80,30 +81,36 @@ void daemonize()
 void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]...\n\n", exec_name);
-    printf("  -f, --follow      output keypress statistics as they update\n");
-    printf("  -d, --daemonize   run in the background\n");
-    printf("  -h, --help        display this help and exit\n");
+    printf("  -f, --follow          output keypress statistics as they update\n");
+    printf("  -d, --daemonize       run in the background\n");
+    printf("  -p, --pid-file=FILE   file to write PID to\n");
+    printf("  -h, --help            display this help and exit\n");
 }
 
 int main(int argc, char** argv)
 {
     bool option_follow = false, option_daemonize = false;
+    char *option_pidfile = NULL;
     
     static struct option long_options[] = {
         {"follow", no_argument, NULL, 'f'},
         {"daemonize", no_argument, NULL, 'd'},
+        {"pid-file", required_argument, NULL, 'p'},
         {"help", no_argument, NULL, 'h'},
         {0, 0, 0, 0}
     };
     
     char c;
-    while ((c = getopt_long(argc, argv, "fdh", long_options, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "fdp:h", long_options, NULL)) != -1) {
         switch(c) {
         case 'f':
             option_follow = true;
             break;
         case 'd':
             option_daemonize = true;
+            break;
+        case 'p':
+            option_pidfile = optarg;
             break;
         case 'h':
             print_usage(argv[0]);
@@ -120,6 +127,18 @@ int main(int argc, char** argv)
     
     if (option_daemonize)
         daemonize();
+    
+    // FIXME: Move this to before closing stderr
+    if (option_pidfile) {
+        pid_t pid = getpid();
+        FILE *pidfile = fopen(option_pidfile, "w");
+        if (!pidfile) {
+            perror(option_pidfile);
+            return 1;
+        }
+        fprintf(pidfile, "%d\n", pid);
+        fclose(pidfile);
+    }
     
     signal(SIGTERM, stop);
     signal(SIGQUIT, stop);

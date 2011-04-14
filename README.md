@@ -1,5 +1,7 @@
 # Keycounter
 
+![](http://stillmaintained.com/programble/keycounter.png)
+
 A keystroke counter for X11.
 
 ## License

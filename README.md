@@ -4,6 +4,17 @@
 
 A keystroke counter for X11.
 
+## Usage
+
+    Usage: keycounter [OPTION]... [FILE]
+    
+      -f, --follow          output keypress statistics as they update
+      -d, --daemonize       run in the background
+      -p, --pid-file=FILE   write PID to FILE
+      -h, --help            display this help and exit
+
+If `FILE` is not preset, write keypress statistics to standard output.
+
 ## License
 
 Copyright (c) 2011, Curtis McEnroe <programble@gmail.com>

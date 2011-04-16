@@ -15,6 +15,14 @@ A keystroke counter for X11.
 
 If `FILE` is not preset, write keypress statistics to standard output.
 
+## Example Output
+
+    You pressed 545 keys in 10 minutes, 45 seconds
+    You pressed 0.84 keys per second
+    You pressed 50.70 keys per minute
+    You pressed 3041.86 keys per hour
+    You pressed 73004.65 keys per day
+
 ## License
 
 Copyright (c) 2011, Curtis McEnroe <programble@gmail.com>

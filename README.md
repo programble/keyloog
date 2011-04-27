@@ -1,12 +1,12 @@
-# Keycounter
+# Keyloog
 
-![](http://stillmaintained.com/programble/keycounter.png)
+![](http://stillmaintained.com/programble/keyloog.png)
 
-A keystroke counter for X11.
+A simple keylogger for X11.
 
 ## Usage
 
-    Usage: keycounter [OPTION]... [FILE]
+    Usage: keyloog [OPTION]... [FILE]
     
       -f, --follow          output keypress statistics as they update
       -d, --daemonize       run in the background
@@ -14,14 +14,6 @@ A keystroke counter for X11.
       -h, --help            display this help and exit
 
 If `FILE` is not preset, write keypress statistics to standard output.
-
-## Example Output
-
-    You pressed 545 keys in 10 minutes, 45 seconds
-    You pressed 0.84 keys per second
-    You pressed 50.70 keys per minute
-    You pressed 3041.86 keys per hour
-    You pressed 73004.65 keys per day
 
 ## License
 

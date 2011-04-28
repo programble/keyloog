@@ -12,7 +12,7 @@ A simple keylogger for X11.
       -p, --pid-file=FILE   write PID to FILE
       -h, --help            display this help and exit
 
-If `FILE` is not preset, write keypresses to stdout.
+If `FILE` is not present, write keypresses to stdout.
 
 ## License
 

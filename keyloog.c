@@ -8,7 +8,6 @@
 #include <getopt.h>
 #include <math.h>
 #include <signal.h>
-#include <time.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 

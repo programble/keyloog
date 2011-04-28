@@ -61,6 +61,11 @@ void print_usage(const char *exec_name)
     printf("  -h, --help            display this help and exit\n");
 }
 
+int bit_offset(unsigned char x)
+{
+    return (int) log2((double) x);
+}
+
 int main(int argc, char *argv[])
 {
     // Parse command-line options
@@ -120,7 +125,10 @@ int main(int argc, char *argv[])
         XQueryKeymap(display, keys_current);
         for (int i = 0; i < 32; i++) {
             if (keys_current[i] > keys_last[i]) {
-                // TODO: Things
+                int keycode = i * 8 + bit_offset(keys_current[i] ^ keys_last[i]);
+                int keysym = XKeycodeToKeysym(display, keycode, 0);
+                char *key = XKeysymToString(keysym);
+                printf("%s ", key);
             }
             keys_last[i] = keys_current[i];
         }

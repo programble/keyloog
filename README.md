@@ -8,7 +8,6 @@ A simple keylogger for X11.
 
     Usage: keyloog [OPTION]... [FILE]
     
-      -f, --follow          output keypress statistics as they update
       -d, --daemonize       run in the background
       -p, --pid-file=FILE   write PID to FILE
       -h, --help            display this help and exit

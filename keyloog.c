@@ -124,11 +124,11 @@ int main(int argc, char *argv[])
         
         XQueryKeymap(display, keys_current);
         for (int i = 0; i < 32; i++) {
-            if (keys_current[i] > keys_last[i]) {
+            if (keys_current[i] != keys_last[i]) {
                 int keycode = i * 8 + bit_offset(keys_current[i] ^ keys_last[i]);
                 int keysym = XKeycodeToKeysym(display, keycode, 0);
                 char *key = XKeysymToString(keysym);
-                printf("%s ", key);
+                printf("%c%s ", (keys_current[i] == 0) ? '-' : '+', key);
             }
             keys_last[i] = keys_current[i];
         }

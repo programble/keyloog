@@ -55,6 +55,7 @@ void signal_quit(int s)
 void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
+    printf("  -a, --append          do not truncate output file\n");
     printf("  -d, --daemonize       run in the background\n");
     printf("  -p, --pid-file=FILE   write PID to FILE\n");
     printf("  -h, --help            display this help and exit\n");
@@ -69,18 +70,22 @@ int main(int argc, char *argv[])
 {
     // Parse command-line options
     static struct option long_options[] = {
+        {"append", no_argument, NULL, 'a'},
         {"daemonize", no_argument, NULL, 'd'},
         {"pid-file", required_argument, NULL, 'p'},
         {"help", no_argument, NULL, 'h'},
         {0, 0, 0, 0}
     };
     
-    bool option_daemonize = false;
+    bool option_daemonize = false, option_append = false;
     char *option_pidfile = NULL, *option_file = NULL;
     
     char o;
-    while ((o = getopt_long(argc, argv, "dp:h", long_options, NULL)) != -1) {
+    while ((o = getopt_long(argc, argv, "adp:h", long_options, NULL)) != -1) {
         switch (o) {
+        case 'a':
+            option_append = true;
+            break;
         case 'd':
             option_daemonize = true;
             break;
@@ -117,7 +122,7 @@ int main(int argc, char *argv[])
     // Open output file
     FILE *file = stdout;
     if (option_file) {
-        file = fopen(option_file, "w");
+        file = fopen(option_file, option_append ? "a" : "w");
         if (!file) {
             perror(option_file);
             exit(1);

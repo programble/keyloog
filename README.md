@@ -6,11 +6,13 @@ A simple keylogger for X11.
 
 ## Usage
 
-    Usage: keyloog [OPTION]... [FILE]
-    
+    Usage: ./keyloog [OPTION]... [FILE]
+
+      -a, --append          do not truncate output file
       -d, --daemonize       run in the background
       -p, --pid-file=FILE   write PID to FILE
       -h, --help            display this help and exit
+          --version         output version information and exit
 
 If `FILE` is not present, write keypresses to stdout.
 

@@ -11,6 +11,10 @@
 #include <unistd.h>
 #include <X11/Xlib.h>
 
+#ifndef PROGRAM_VERSION
+#   define PROGRAM_VERSION "(unknown)"
+#endif
+
 void daemonize(const char *option_pidfile)
 {
     pid_t pid = fork();
@@ -52,6 +56,11 @@ void signal_quit(int s)
     end = true;
 }
 
+void print_version()
+{
+    printf("Keyloog " PROGRAM_VERSION "\n");
+}
+
 void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
@@ -59,6 +68,7 @@ void print_usage(const char *exec_name)
     printf("  -d, --daemonize       run in the background\n");
     printf("  -p, --pid-file=FILE   write PID to FILE\n");
     printf("  -h, --help            display this help and exit\n");
+    printf("      --version         output version information and exit\n");
 }
 
 int bit_offset(unsigned char x)
@@ -74,6 +84,7 @@ int main(int argc, char *argv[])
         {"daemonize", no_argument, NULL, 'd'},
         {"pid-file", required_argument, NULL, 'p'},
         {"help", no_argument, NULL, 'h'},
+        {"version", no_argument, NULL, 'v'},
         {0, 0, 0, 0}
     };
     
@@ -94,6 +105,9 @@ int main(int argc, char *argv[])
             break;
         case 'h':
             print_usage(argv[0]);
+            return 0;
+        case 'v':
+            print_version();
             return 0;
         case '?': // Unrecognized argument
             return 1;

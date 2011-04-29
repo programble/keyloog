@@ -6,7 +6,7 @@ A simple keylogger for X11.
 
 ## Usage
 
-    Usage: ./keyloog [OPTION]... [FILE]
+    Usage: keyloog [OPTION]... [FILE]
 
       -a, --append          do not truncate output file
       -d, --daemonize       run in the background

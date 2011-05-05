@@ -64,9 +64,13 @@ void print_version()
 void print_usage(const char *exec_name)
 {
     printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
+    
     printf("  -a, --append          do not truncate output file\n");
+    printf("      --simple          log only key down events\n\n");
+    
     printf("  -d, --daemonize       run in the background\n");
-    printf("  -p, --pid-file=FILE   write PID to FILE\n");
+    printf("  -p, --pid-file=FILE   write PID to FILE\n\n");
+    
     printf("  -h, --help            display this help and exit\n");
     printf("      --version         output version information and exit\n");
 }
@@ -81,6 +85,7 @@ int main(int argc, char *argv[])
     // Parse command-line options
     static struct option long_options[] = {
         {"append", no_argument, NULL, 'a'},
+        {"simple", no_argument, NULL, 's'},
         {"daemonize", no_argument, NULL, 'd'},
         {"pid-file", required_argument, NULL, 'p'},
         {"help", no_argument, NULL, 'h'},
@@ -88,7 +93,7 @@ int main(int argc, char *argv[])
         {0, 0, 0, 0}
     };
     
-    bool option_daemonize = false, option_append = false;
+    bool option_daemonize = false, option_append = false, option_simple = false;
     char *option_pidfile = NULL, *option_file = NULL;
     
     char o;
@@ -96,6 +101,9 @@ int main(int argc, char *argv[])
         switch (o) {
         case 'a':
             option_append = true;
+            break;
+        case 's':
+            option_simple = true;
             break;
         case 'd':
             option_daemonize = true;
@@ -156,7 +164,12 @@ int main(int argc, char *argv[])
                 int keycode = i * 8 + bit_offset(keys_current[i] ^ keys_last[i]);
                 int keysym = XKeycodeToKeysym(display, keycode, 0);
                 char *key = XKeysymToString(keysym);
-                fprintf(file, "%c%s ", (keys_current[i] == 0) ? '-' : '+', key);
+                if (option_simple) {
+                    if (keys_current[i] > keys_last[i])
+                        fprintf(file, "%s ", key);
+                } else {
+                    fprintf(file, "%c%s ", (keys_current[i] < keys_last[i]) ? '-' : '+', key);
+                }
             }
             keys_last[i] = keys_current[i];
         }

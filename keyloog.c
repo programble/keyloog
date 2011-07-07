@@ -8,6 +8,7 @@
 #include <getopt.h>
 #include <math.h>
 #include <signal.h>
+#include <string.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 
@@ -80,6 +81,14 @@ int bit_offset(unsigned char x)
     return (int) log2((double) x);
 }
 
+void spoof_argv(int argc, char *argv[], char *spoof)
+{
+    strncpy(argv[0], spoof, strlen(argv[0]));
+    for (int i = 1; i < argc; i++) {
+        memset(argv[i], 0, strlen(argv[i]));
+    }
+}
+
 int main(int argc, char *argv[])
 {
     // Parse command-line options
@@ -124,7 +133,7 @@ int main(int argc, char *argv[])
     
     if (optind < argc)
         option_file = argv[optind];
-    
+
     // Set up signals
     signal(SIGTERM, signal_quit);
     signal(SIGQUIT, signal_quit);

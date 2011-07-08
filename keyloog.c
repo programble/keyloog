@@ -140,9 +140,6 @@ int main(int argc, char *argv[])
     if (optind < argc)
         option_file = argv[optind];
 
-    /*if (option_spoof)
-        spoof_argv(argc, argv, option_spoof);*/
-
     // Set up signals
     signal(SIGTERM, signal_quit);
     signal(SIGQUIT, signal_quit);

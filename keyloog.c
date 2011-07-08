@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
     if (optind < argc)
         option_file = argv[optind];
 
-    if (option_spoof)
-        spoof_argv(argc, argv, option_spoof);
+    /*if (option_spoof)
+        spoof_argv(argc, argv, option_spoof);*/
 
     // Set up signals
     signal(SIGTERM, signal_quit);
@@ -151,6 +151,10 @@ int main(int argc, char *argv[])
     // Daemonize
     if (option_daemonize)
         daemonize(option_pidfile);
+
+    // Spoof argv
+    if (option_spoof)
+        spoof_argv(argc, argv, option_spoof);
     
     // Open X display
     Display *display = XOpenDisplay(NULL);

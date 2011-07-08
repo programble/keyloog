@@ -14,6 +14,8 @@ A simple keylogger for X11.
       -d, --daemonize       run in the background
       -p, --pid-file=FILE   write PID to FILE
     
+          --spoof=NAME      change command line to NAME
+    
       -h, --help            display this help and exit
           --version         output version information and exit
 

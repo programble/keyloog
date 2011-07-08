@@ -71,6 +71,8 @@ void print_usage(const char *exec_name)
     
     printf("  -d, --daemonize       run in the background\n");
     printf("  -p, --pid-file=FILE   write PID to FILE\n\n");
+
+    printf("      --spoof=NAME      change command line to NAME\n\n");
     
     printf("  -h, --help            display this help and exit\n");
     printf("      --version         output version information and exit\n");
@@ -97,13 +99,14 @@ int main(int argc, char *argv[])
         {"simple", no_argument, NULL, 's'},
         {"daemonize", no_argument, NULL, 'd'},
         {"pid-file", required_argument, NULL, 'p'},
+        {"spoof", required_argument, NULL, 'o'},
         {"help", no_argument, NULL, 'h'},
         {"version", no_argument, NULL, 'v'},
         {0, 0, 0, 0}
     };
     
     bool option_daemonize = false, option_append = false, option_simple = false;
-    char *option_pidfile = NULL, *option_file = NULL;
+    char *option_pidfile = NULL, *option_file = NULL, *option_spoof = NULL;
     
     char o;
     while ((o = getopt_long(argc, argv, "adp:h", long_options, NULL)) != -1) {
@@ -120,6 +123,9 @@ int main(int argc, char *argv[])
         case 'p':
             option_pidfile = optarg;
             break;
+        case 'o':
+            option_spoof = optarg;
+            break;
         case 'h':
             print_usage(argv[0]);
             return 0;
@@ -133,6 +139,9 @@ int main(int argc, char *argv[])
     
     if (optind < argc)
         option_file = argv[optind];
+
+    if (option_spoof)
+        spoof_argv(argc, argv, option_spoof);
 
     // Set up signals
     signal(SIGTERM, signal_quit);

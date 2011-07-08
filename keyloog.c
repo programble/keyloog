@@ -9,6 +9,7 @@
 #include <math.h>
 #include <signal.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 
@@ -67,7 +68,8 @@ void print_usage(const char *exec_name)
     printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
     
     printf("  -a, --append          do not truncate output file\n");
-    printf("      --simple          log only key down events\n\n");
+    printf("      --simple          log only key down events\n");
+    printf("  -t, --time            log timestamps\n\n");
     
     printf("  -d, --daemonize       run in the background\n");
     printf("  -p, --pid-file=FILE   write PID to FILE\n\n");
@@ -97,6 +99,7 @@ int main(int argc, char *argv[])
     static struct option long_options[] = {
         {"append", no_argument, NULL, 'a'},
         {"simple", no_argument, NULL, 's'},
+        {"time", no_argument, NULL, 't'},
         {"daemonize", no_argument, NULL, 'd'},
         {"pid-file", required_argument, NULL, 'p'},
         {"spoof", required_argument, NULL, 'o'},
@@ -105,17 +108,20 @@ int main(int argc, char *argv[])
         {0, 0, 0, 0}
     };
     
-    bool option_daemonize = false, option_append = false, option_simple = false;
+    bool option_daemonize = false, option_append = false, option_simple = false, option_time = false;
     char *option_pidfile = NULL, *option_file = NULL, *option_spoof = NULL;
     
     char o;
-    while ((o = getopt_long(argc, argv, "adp:h", long_options, NULL)) != -1) {
+    while ((o = getopt_long(argc, argv, "atdp:h", long_options, NULL)) != -1) {
         switch (o) {
         case 'a':
             option_append = true;
             break;
         case 's':
             option_simple = true;
+            break;
+        case 't':
+            option_time = true;
             break;
         case 'd':
             option_daemonize = true;
@@ -187,7 +193,15 @@ int main(int argc, char *argv[])
                     if (keys_current[i] > keys_last[i])
                         fprintf(file, "%s ", key);
                 } else {
+                    if (option_time) {
+                        time_t now = time(NULL);
+                        char *timestamp = ctime(&now);
+                        timestamp[strlen(timestamp)-1] = 0;
+                        fprintf(file, "[%s] ", timestamp);
+                    }
                     fprintf(file, "%c%s ", (keys_current[i] < keys_last[i]) ? '-' : '+', key);
+                    if (option_time)
+                        fprintf(file, "\n");
                 }
             }
             keys_last[i] = keys_current[i];

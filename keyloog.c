@@ -97,14 +97,14 @@ int main(int argc, char *argv[])
 {
     // Parse command-line options
     static struct option long_options[] = {
-        {"append", no_argument, NULL, 'a'},
-        {"simple", no_argument, NULL, 's'},
-        {"time", no_argument, NULL, 't'},
-        {"daemonize", no_argument, NULL, 'd'},
-        {"pid-file", required_argument, NULL, 'p'},
-        {"spoof", required_argument, NULL, 'o'},
-        {"help", no_argument, NULL, 'h'},
-        {"version", no_argument, NULL, 'v'},
+        {"append",      no_argument,        NULL, 'a'},
+        {"simple",      no_argument,        NULL, 's'},
+        {"time",        no_argument,        NULL, 't'},
+        {"daemonize",   no_argument,        NULL, 'd'},
+        {"pid-file",    required_argument,  NULL, 'p'},
+        {"spoof",       required_argument,  NULL, 'o'},
+        {"help",        no_argument,        NULL, 'h'},
+        {"version",     no_argument,        NULL, 'v'},
         {0, 0, 0, 0}
     };
     

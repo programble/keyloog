@@ -110,32 +110,15 @@ int main(int argc, char *argv[])
     char o;
     while ((o = getopt_long(argc, argv, "astdp:h", long_options, NULL)) != -1) {
         switch (o) {
-        case 'a':
-            option_append = true;
-            break;
-        case 's':
-            option_simple = true;
-            break;
-        case 't':
-            option_time = true;
-            break;
-        case 'd':
-            option_daemonize = true;
-            break;
-        case 'p':
-            option_pidfile = optarg;
-            break;
-        case 'o':
-            option_spoof = optarg;
-            break;
-        case 'h':
-            print_usage(argv[0]);
-            return 0;
-        case 'v':
-            print_version();
-            return 0;
-        case '?': // Unrecognized argument
-            return 1;
+        case 'a': option_append = true;     break;
+        case 's': option_simple = true;     break;
+        case 't': option_time = true;       break;
+        case 'd': option_daemonize = true;  break;
+        case 'p': option_pidfile = optarg;  break;
+        case 'o': option_spoof = optarg;    break;
+        case 'h': print_usage(argv[0]);     exit(EXIT_SUCCESS);
+        case 'v': print_version();          exit(EXIT_SUCCESS);
+        case '?':                           exit(EXIT_FAILURE);
         }
     }
     

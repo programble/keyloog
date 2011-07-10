@@ -22,19 +22,19 @@ void daemonize(const char *option_pidfile)
     pid_t pid = fork();
     if (pid < 0) {
         perror("fork");
-        exit(1);
+        exit(EXIT_FAILURE);
     } else if (pid > 0) {
         // Write child PID to file
         if (option_pidfile) {
             FILE *pidfile = fopen(option_pidfile, "w");
             if (!pidfile) {
                 perror(option_pidfile);
-                exit(1);
+                exit(EXIT_FAILURE);
             }
             fprintf(pidfile, "%d\n", pid);
             fclose(pidfile);
         }
-        exit(0);
+        exit(EXIT_SUCCESS);
     }
     
     // Detach from controlling terminal
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
     Display *display = XOpenDisplay(NULL);
     if (!display) {
         fprintf(stderr, "Error: Could not open X display\n");
-        return 1;
+        exit(EXIT_FAILURE);
     }
     
     // Open output file
@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
         file = fopen(option_file, option_append ? "a" : "w");
         if (!file) {
             perror(option_file);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
     }
     
@@ -213,5 +213,5 @@ int main(int argc, char *argv[])
     XCloseDisplay(display);
     fclose(file);
     
-    return 0;
+    return EXIT_SUCCESS;
 }

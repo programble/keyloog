@@ -98,9 +98,9 @@ int main(int argc, char *argv[])
         {"time",        no_argument,        NULL, 't'},
         {"daemonize",   no_argument,        NULL, 'd'},
         {"pid-file",    required_argument,  NULL, 'p'},
-        {"spoof",       required_argument,  NULL, 'o'},
+        {"spoof",       required_argument,  NULL, 'S'},
         {"help",        no_argument,        NULL, 'h'},
-        {"version",     no_argument,        NULL, 'v'},
+        {"version",     no_argument,        NULL, 'V'},
         {0, 0, 0, 0}
     };
     static char short_options[] = "astdp:h";
@@ -116,9 +116,9 @@ int main(int argc, char *argv[])
         case 't': option_time = true;       break;
         case 'd': option_daemonize = true;  break;
         case 'p': option_pidfile = optarg;  break;
-        case 'o': option_spoof = optarg;    break;
+        case 'S': option_spoof = optarg;    break;
         case 'h': print_usage(argv[0]);     exit(EXIT_SUCCESS);
-        case 'v': print_version();          exit(EXIT_SUCCESS);
+        case 'V': print_version();          exit(EXIT_SUCCESS);
         case '?':                           exit(EXIT_FAILURE);
         }
     }

@@ -189,19 +189,21 @@ int main(int argc, char *argv[])
                 int keycode = i * 8 + bit_offset(keys_current[i] ^ keys_last[i]);
                 int keysym = XKeycodeToKeysym(display, keycode, 0);
                 char *key = XKeysymToString(keysym);
-                if (option_simple) {
-                    if (keys_current[i] > keys_last[i])
-                        fprintf(file, "%s ", key);
-                } else {
-                    if (option_time) {
-                        time_t now = time(NULL);
-                        char *timestamp = ctime(&now);
-                        timestamp[strlen(timestamp)-1] = 0;
-                        fprintf(file, "[%s] ", timestamp);
-                    }
-                    fprintf(file, "%c%s ", (keys_current[i] < keys_last[i]) ? '-' : '+', key);
+
+                time_t now = time(NULL);
+                char *timestamp = ctime(&now);
+                timestamp[strlen(timestamp)-1] = 0; // Strip \n
+
+                if (option_simple && keys_current[i] > keys_last[i]) {
                     if (option_time)
-                        fprintf(file, "\n");
+                        fprintf(file, "[%s] %s\n", timestamp, key);
+                    else
+                        fprintf(file, "%s ", key);
+                } else if (!option_simple) {
+                    if (option_time)
+                        fprintf(file, "[%s] %c%s\n", timestamp, (keys_current[i] < keys_last[i]) ? '-' : '+', key);
+                    else
+                        fprintf(file, "%c%s ", (keys_current[i] < keys_last[i]) ? '-' : '+', key);
                 }
             }
             keys_last[i] = keys_current[i];

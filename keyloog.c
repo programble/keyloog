@@ -68,7 +68,7 @@ void print_usage(const char *exec_name)
     printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
     
     printf("  -a, --append          do not truncate output file\n");
-    printf("      --simple          log only key down events\n");
+    printf("  -s, --simple          log only key down events\n");
     printf("  -t, --time            log timestamps\n\n");
     
     printf("  -d, --daemonize       run in the background\n");
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
     char *option_pidfile = NULL, *option_file = NULL, *option_spoof = NULL;
     
     char o;
-    while ((o = getopt_long(argc, argv, "atdp:h", long_options, NULL)) != -1) {
+    while ((o = getopt_long(argc, argv, "astdp:h", long_options, NULL)) != -1) {
         switch (o) {
         case 'a':
             option_append = true;

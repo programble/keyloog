@@ -9,7 +9,8 @@ A simple keylogger for X11.
     Usage: keyloog [OPTION]... [FILE]
     
       -a, --append          do not truncate output file
-          --simple          log only key down events
+      -s, --simple          log only key down events
+      -t, --time            log timestamps
     
       -d, --daemonize       run in the background
       -p, --pid-file=FILE   write PID to FILE

@@ -103,12 +103,13 @@ int main(int argc, char *argv[])
         {"version",     no_argument,        NULL, 'v'},
         {0, 0, 0, 0}
     };
+    static char short_options[] = "astdp:h";
     
     bool option_daemonize = false, option_append = false, option_simple = false, option_time = false;
     char *option_pidfile = NULL, *option_file = NULL, *option_spoof = NULL;
     
     char o;
-    while ((o = getopt_long(argc, argv, "astdp:h", long_options, NULL)) != -1) {
+    while ((o = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
         switch (o) {
         case 'a': option_append = true;     break;
         case 's': option_simple = true;     break;

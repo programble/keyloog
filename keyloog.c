@@ -59,9 +59,9 @@ void print_version()
     printf("Keyloog " PROGRAM_VERSION "\n");
 }
 
-void print_usage(const char *exec_name)
+void print_usage()
 {
-    printf("Usage: %s [OPTION]... [FILE]\n\n", exec_name);
+    printf("Usage: keyloog [OPTION...] [FILE]\n\n");
     
     printf("  -a, --append          do not truncate output file\n");
     printf("  -s, --simple          log only key down events\n");
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         case 'd': option_daemonize = true;  break;
         case 'p': option_pidfile = optarg;  break;
         case 'S': option_spoof = optarg;    break;
-        case 'h': print_usage(argv[0]);     exit(EXIT_SUCCESS);
+        case 'h': print_usage();            exit(EXIT_SUCCESS);
         case 'V': print_version();          exit(EXIT_SUCCESS);
         case '?':                           exit(EXIT_FAILURE);
         }

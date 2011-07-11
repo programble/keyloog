@@ -48,9 +48,11 @@ void daemonize(const char *option_pidfile)
 
 // Signal handlers
 bool end = false;
+int end_signal;
 
 void signal_quit(int s)
 {
+    end_signal = s;
     end = true;
 }
 

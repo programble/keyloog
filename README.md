@@ -1,7 +1,5 @@
 # Keyloog
 
-![](http://stillmaintained.com/programble/keyloog.png)
-
 A simple keylogger for X11.
 
 ## Usage
